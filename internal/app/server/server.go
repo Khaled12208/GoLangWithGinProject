@@ -9,6 +9,7 @@ import (
 	"golangwithgin/internal/repository/mysql"
 	"golangwithgin/internal/service"
 	"golangwithgin/pkg/database"
+	"golangwithgin/internal/domain"
 
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
@@ -28,6 +29,14 @@ func New(cfg *config.Config, logger *logrus.Logger) *Server {
 	db, err := database.NewMySQLDB(cfg.Database)
 	if err != nil {
 		logger.Fatalf("Failed to connect to database: %v", err)
+	}
+
+	// Run migrations
+	if err := db.AutoMigrate(
+		&domain.User{},
+		&domain.Task{},
+	); err != nil {
+		logger.Fatalf("Failed to run migrations: %v", err)
 	}
 
 	// Initialize repositories

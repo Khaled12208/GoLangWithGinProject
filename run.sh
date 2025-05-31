@@ -15,6 +15,18 @@ else
     NC=''
 fi
 
+# Function to display KHALED ASCII art
+display_khaled_ascii() {
+    echo -e "${BLUE}"
+    echo "██╗  ██╗██╗  ██╗ █████╗ ██╗     ███████╗██████╗"
+    echo "██║ ██╔╝██║  ██║██╔══██╗██║     ██╔════╝██╔══██╗"
+    echo "█████╔╝ ███████║███████║██║     █████╗  ██║  ██║"
+    echo "██╔═██╗ ██╔══██║██╔══██║██║     ██╔══╝  ██║  ██║"
+    echo "██║  ██╗██║  ██║██║  ██║███████╗███████╗██████╔╝"
+    echo "╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝╚═════╝"
+    echo -e "${NC}"
+}
+
 # Detect OS
 detect_os() {
     case "$(uname -s)" in
@@ -231,6 +243,7 @@ run_all_tests() {
 # Function to run locally
 run_local() {
     echo -e "${BLUE}Starting local development...${NC}"
+    display_khaled_ascii
     check_requirements
     
     # Check if ports are available
@@ -285,6 +298,7 @@ run_local() {
 # Function to run in Docker
 run_docker() {
     echo -e "${BLUE}Starting Docker deployment...${NC}"
+    display_khaled_ascii
     check_requirements
     
     # Check if ports are available
@@ -364,6 +378,7 @@ kill_port_process() {
 # Function to start the application with Swagger
 start_application() {
     echo -e "${BLUE}Starting the application with Swagger UI...${NC}"
+    display_khaled_ascii
     
     # Kill any process using port 8888
     if is_port_in_use 8888; then
