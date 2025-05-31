@@ -1,0 +1,71 @@
+version: "3.8"
+
+services:
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    environment:
+      - DB_HOST=mysql-test
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=test-password
+      - DB_NAME=test_db
+      - GIN_MODE=test
+    depends_on:
+      mysql-test:
+        condition: service_healthy
+    networks:
+      - test-network
+    volumes:
+      - .:/app
+      - go-pkg:/go/pkg
+    command: >
+      sh -c "
+        echo 'Waiting for MySQL to be ready...' &&
+        while ! mysqladmin ping -h mysql-test -u root -ptest-password --silent; do
+          sleep 1
+        done &&
+        echo 'Running unit tests...' &&
+        go test ./internal/... -v -coverprofile=coverage.out -json | tee test-output.json &&
+        go tool cover -html=coverage.out -o coverage.html &&
+        echo 'Running integration tests...' &&
+        go test ./tests/integration/... -v -coverprofile=integration-coverage.out -json | tee integration-test-output.json &&
+        go tool cover -html=integration-coverage.out -o integration-coverage.html
+      "
+
+  mysql-test:
+    image: mysql:8.0
+    container_name: mysql-test
+    environment:
+      MYSQL_ROOT_PASSWORD: mysecretpassword
+      MYSQL_DATABASE: golangwithgin_test
+    ports:
+      - "3307:3306"
+    command: --default-authentication-plugin=mysql_native_password
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-u",
+          "root",
+          "-p$$MYSQL_ROOT_PASSWORD",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    networks:
+      - test-network
+    tmpfs:
+      - /var/lib/mysql
+
+volumes:
+  go-pkg:
+
+networks:
+  test-network:
+    driver: bridge

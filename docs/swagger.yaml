@@ -1,0 +1,361 @@
+basePath: /api/v1
+definitions:
+  domain.ErrorResponse:
+    properties:
+      error:
+        example: error message
+        type: string
+    type: object
+  domain.SwaggerTask:
+    properties:
+      created_at:
+        example: "2025-05-31T15:04:05Z"
+        type: string
+      description:
+        example: Process the uploaded data file
+        type: string
+      id:
+        example: 1
+        type: integer
+      status:
+        example: pending
+        type: string
+      title:
+        example: Process Data
+        type: string
+      updated_at:
+        example: "2025-05-31T15:04:05Z"
+        type: string
+    type: object
+  domain.SwaggerUserResponse:
+    properties:
+      created_at:
+        example: "2025-05-31T15:04:05Z"
+        type: string
+      email:
+        example: john@example.com
+        type: string
+      id:
+        example: 1
+        type: integer
+      updated_at:
+        example: "2025-05-31T15:04:05Z"
+        type: string
+      username:
+        example: johndoe
+        type: string
+    type: object
+  domain.TokenResponse:
+    properties:
+      token:
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        type: string
+    type: object
+  handlers.LoginRequest:
+    properties:
+      password:
+        example: secretpass123
+        type: string
+      username:
+        example: johndoe
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  handlers.RegisterRequest:
+    properties:
+      email:
+        example: john@example.com
+        type: string
+      password:
+        example: secretpass123
+        type: string
+      username:
+        example: johndoe
+        type: string
+    required:
+    - email
+    - password
+    - username
+    type: object
+  handlers.UpdateUserRequest:
+    properties:
+      email:
+        example: john_updated@example.com
+        type: string
+      username:
+        example: johndoe_updated
+        type: string
+    type: object
+host: localhost:8889
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: A RESTful API server using Go and Gin framework
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: GolangWithGin API
+  version: "1.0"
+paths:
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate a user and return a JWT token
+      parameters:
+      - description: Login credentials
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.TokenResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: User login
+      tags:
+      - auth
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: Register a new user in the system
+      parameters:
+      - description: User registration details
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/domain.SwaggerUserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Register new user
+      tags:
+      - auth
+  /tasks:
+    get:
+      consumes:
+      - application/json
+      description: Get a list of all tasks
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.SwaggerTask'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Get all tasks
+      tags:
+      - tasks
+    post:
+      consumes:
+      - application/json
+      description: Submit a new task for processing
+      parameters:
+      - description: Task details
+        in: body
+        name: task
+        required: true
+        schema:
+          $ref: '#/definitions/domain.SwaggerTask'
+      produces:
+      - application/json
+      responses:
+        "202":
+          description: Accepted
+          schema:
+            $ref: '#/definitions/domain.SwaggerTask'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Create a new task
+      tags:
+      - tasks
+  /tasks/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get a task's details and status by its ID
+      parameters:
+      - description: Task ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.SwaggerTask'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Get task by ID
+      tags:
+      - tasks
+  /user:
+    get:
+      consumes:
+      - application/json
+      description: Get the profile of the currently authenticated user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.SwaggerUserResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Get user profile
+      tags:
+      - users
+    put:
+      consumes:
+      - application/json
+      description: Update the profile of the currently authenticated user
+      parameters:
+      - description: User update details
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.UpdateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.SwaggerUserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Update user profile
+      tags:
+      - users
+  /user/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a user by ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Delete user
+      tags:
+      - users
+securityDefinitions:
+  Bearer:
+    description: Type "Bearer" followed by a space and JWT token.
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

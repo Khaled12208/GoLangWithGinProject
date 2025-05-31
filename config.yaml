@@ -1,0 +1,20 @@
+server:
+  port: "8888"
+  readTimeout: 60s
+  writeTimeout: 60s
+
+database:
+  host: "mysql"
+  port: "3306"
+  user: "root"
+  password: "password"
+  dbname: "golangwithgin"
+
+jwt:
+  secret: "your-secret-key-change-in-production"
+  tokenExpiry: 24h
+  refreshExpiry: 168h
+
+logger:
+  level: "info"
+  file: "app.log"

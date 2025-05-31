@@ -1,0 +1,17 @@
+server:
+  port: "8888"
+
+database:
+  host: "localhost"
+  port: 3306
+  username: "root"
+  password: "mysecretpassword"
+  dbname: "golangwithgin"
+
+jwt:
+  secret: "your-secret-key"
+  expiration: 24h
+
+logger:
+  level: "info"
+  file: "app.log"
