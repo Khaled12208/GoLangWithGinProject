@@ -2,7 +2,7 @@
   "info": {
     "_postman_id": "a1b2c3d4-e5f6-g7h8-i9j0-k1l2m3n4o5p6",
     "name": "GolangWithGin API",
-    "description": "API collection for GolangWithGin project",
+    "description": "API collection for GolangWithGin project.\n\nSet {{base_url}} to http://localhost:8888 and {{auth_token}} to the JWT token from login.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -13,15 +13,10 @@
           "name": "Register",
           "request": {
             "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"username\": \"testuser\",\n    \"password\": \"testpass123\",\n    \"email\": \"test@example.com\"\n}"
+              "raw": "{\n    \"username\": \"testuser\",\n    \"password\": \"testpass123\",\n    \"email\": \"test22@example.com\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/v1/register",
@@ -35,12 +30,7 @@
           "name": "Login",
           "request": {
             "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
               "raw": "{\n    \"username\": \"testuser\",\n    \"password\": \"testpass123\"\n}"
@@ -50,7 +40,7 @@
               "host": ["{{base_url}}"],
               "path": ["api", "v1", "login"]
             },
-            "description": "Login with existing user credentials"
+            "description": "Login with existing user credentials. Save the returned token as {{auth_token}}."
           }
         }
       ]
@@ -130,25 +120,19 @@
           "request": {
             "method": "POST",
             "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{auth_token}}"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
+              { "key": "Authorization", "value": "Bearer {{auth_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"title\": \"Test Task\",\n    \"description\": \"This is a test task\",\n    \"status\": \"pending\"\n}"
+              "raw": "{\n    \"title\": \"Test Task\",\n    \"description\": \"This is a test task.\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/v1/tasks",
               "host": ["{{base_url}}"],
               "path": ["api", "v1", "tasks"]
             },
-            "description": "Create a new task"
+            "description": "Create a new task (requires Authorization header with Bearer token)"
           }
         },
         {
@@ -156,17 +140,14 @@
           "request": {
             "method": "GET",
             "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{auth_token}}"
-              }
+              { "key": "Authorization", "value": "Bearer {{auth_token}}" }
             ],
             "url": {
               "raw": "{{base_url}}/api/v1/tasks/{{task_id}}",
               "host": ["{{base_url}}"],
               "path": ["api", "v1", "tasks", "{{task_id}}"]
             },
-            "description": "Get a task by ID"
+            "description": "Get a task by ID (requires Authorization header)"
           }
         },
         {
@@ -174,17 +155,14 @@
           "request": {
             "method": "GET",
             "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{auth_token}}"
-              }
+              { "key": "Authorization", "value": "Bearer {{auth_token}}" }
             ],
             "url": {
               "raw": "{{base_url}}/api/v1/tasks",
               "host": ["{{base_url}}"],
               "path": ["api", "v1", "tasks"]
             },
-            "description": "Get all tasks"
+            "description": "Get all tasks (requires Authorization header)"
           }
         }
       ]

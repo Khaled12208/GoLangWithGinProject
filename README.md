@@ -184,55 +184,27 @@ go install github.com/swaggo/swag/cmd/swag@latest
 
 ## Running the Application
 
-### Using the Script (Recommended)
+### Local Development (Default & Recommended)
 
-1. Start the application with Swagger UI:
-
-```bash
-./run.sh start
-```
-
-2. Run in local development mode:
+Start the application with Swagger UI:
 
 ```bash
 ./run.sh local
 ```
 
-3. Run with Docker:
-
-```bash
-./run.sh docker
-```
-
-4. Stop all services:
+To stop all services:
 
 ```bash
 ./run.sh stop
 ```
 
-5. Clean up resources:
+To clean up resources:
 
 ```bash
 ./run.sh clean
 ```
 
-### Manual Setup
-
-1. Start MySQL:
-
-```bash
-docker run --name mysql-local \
-    -e MYSQL_ROOT_PASSWORD=mysecretpassword \
-    -e MYSQL_DATABASE=golangwithgin \
-    -p 3306:3306 \
-    -d mysql:8.0
-```
-
-2. Generate Swagger documentation:
-
-```bash
-swag init -g cmd/api/main.go
-```
+Swagger UI will be available at: http://localhost:8888/swagger/index.html
 
 ## API Documentation
 
